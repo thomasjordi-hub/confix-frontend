@@ -9,7 +9,7 @@ export default function AnalysePage() {
   const [loading, setLoading] = useState(false);
 
   // -----------------------------
-  // 🛠 Ergebnis stabilisieren
+  // 🛠 Ergebnis sicher normalisieren
   // -----------------------------
   function normalizeResult(data: any) {
     return {
@@ -55,7 +55,7 @@ export default function AnalysePage() {
       });
 
       const data = await res.json();
-      setResult(normalizeResult(data)); // <— HIER wichtig
+      setResult(normalizeResult(data));
     } catch (err) {
       setResult({ error: "API unreachable", details: String(err) });
     }
@@ -63,6 +63,9 @@ export default function AnalysePage() {
     setLoading(false);
   }
 
+  // -----------------------------
+  // 🖥 UI Rendering
+  // -----------------------------
   return (
     <div className="max-w-3xl mx-auto p-8">
       <h1 className="text-3xl font-bold mb-6">CMDB Analyse – 10 Fragen</h1>
@@ -72,14 +75,13 @@ export default function AnalysePage() {
         {questions.map((q) => (
           <div key={q.id}>
             <label className="block font-medium mb-2">{q.text}</label>
+
             <select
               onChange={(e) => updateAnswer(q.id, e.target.value)}
               className="border rounded w-full p-2"
               value={answers[q.id] || ""}
             >
-              <option value="" disabled>
-                Bitte wählen…
-              </option>
+              <option value="" disabled>Bitte wählen…</option>
               {q.options.map((opt: string) => (
                 <option key={opt} value={opt}>
                   {opt}
@@ -98,11 +100,12 @@ export default function AnalysePage() {
         Analyse starten
       </button>
 
-      {/* Ergebnis */}
       {loading && <p className="mt-4">Analyse läuft…</p>}
 
+      {/* Ergebnisbereich */}
       {result && (
-        <div className="mt-16 space-y-12 animate-fadeIn">
+        <div className="mt-16 space-y-12">
+
           {/* HEADER CARD */}
           <div className="bg-white border border-gray-200 shadow-lg rounded-2xl p-8">
             <div className="flex items-center justify-between">
@@ -113,7 +116,6 @@ export default function AnalysePage() {
                 </p>
               </div>
 
-              {/* MATURITY BADGE */}
               <span
                 className={`
                   px-6 py-3 text-white text-sm rounded-full font-semibold shadow
@@ -137,22 +139,21 @@ export default function AnalysePage() {
 
           {/* GRID */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
             {/* LEFT: SCORES */}
             <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
               <h3 className="text-xl font-semibold mb-6">Reifegrad-Scores</h3>
 
               <div className="space-y-6">
                 {Object.entries(result.scores).map(([key, value]: any) => {
-                  const label =
-                    key === "data_quality"
-                      ? "Datenqualität"
-                      : key === "process_maturity"
-                      ? "Prozessreife"
-                      : key === "automation"
-                      ? "Automatisierung"
-                      : key === "governance"
-                      ? "Governance"
-                      : key;
+                  const labelMap: any = {
+                    data_quality: "Datenqualität",
+                    process_maturity: "Prozessreife",
+                    automation: "Automatisierung",
+                    governance: "Governance",
+                  };
+
+                  const label = labelMap[key] || key;
 
                   const color =
                     value < 40
@@ -182,16 +183,14 @@ export default function AnalysePage() {
 
             {/* RIGHT: RISKS + RECOMMENDATIONS */}
             <div className="space-y-6">
+
               {/* Risiken */}
               <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
                 <h3 className="text-xl font-semibold mb-4">Identifizierte Risiken</h3>
 
                 <div className="space-y-4">
                   {result.risks.map((risk: string, i: number) => (
-                    <div
-                      key={i}
-                      className="p-4 bg-red-50 border border-red-200 rounded-xl"
-                    >
+                    <div key={i} className="p-4 bg-red-50 border border-red-200 rounded-xl">
                       <span className="font-semibold text-red-700">⚠️ Risiko:</span>
                       <p className="text-red-700 mt-1 leading-relaxed">{risk}</p>
                     </div>
@@ -201,16 +200,11 @@ export default function AnalysePage() {
 
               {/* Empfehlungen */}
               <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
-                <h3 className="text-xl font-semibold mb-4">
-                  Strategische Empfehlungen
-                </h3>
+                <h3 className="text-xl font-semibold mb-4">Strategische Empfehlungen</h3>
 
                 <div className="space-y-4">
                   {result.recommendations.map((rec: any, i: number) => (
-                    <div
-                      key={i}
-                      className="p-4 bg-gray-50 border rounded-xl shadow-sm"
-                    >
+                    <div key={i} className="p-4 bg-gray-50 border rounded-xl shadow-sm">
                       <div className="font-bold mb-1 text-gray-800">
                         Priorität {rec.prio}
                       </div>
@@ -219,8 +213,10 @@ export default function AnalysePage() {
                   ))}
                 </div>
               </div>
+
             </div>
           </div>
+
         </div>
       )}
     </div>
