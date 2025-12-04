@@ -80,11 +80,74 @@ export default function AnalysePage() {
       {loading && <p className="mt-4">Analyse läuft…</p>}
 
       {result && (
-  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-    <h2 className="text-xl font-bold mb-4">Ergebnis</h2>
-    <pre className="text-sm bg-gray-100 p-4 rounded-lg">
-      {JSON.stringify(result, null, 2)}
-    </pre>
+  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-8">
+
+    {/* Titel + Maturity Badge */}
+    <div className="flex items-center justify-between">
+      <h2 className="text-2xl font-bold">Analyse Ergebnis</h2>
+      <span className="px-4 py-2 rounded-full text-white text-sm font-semibold bg-black">
+        {result.maturity_level}
+      </span>
+    </div>
+
+    {/* Score-Balken */}
+    <div className="space-y-6">
+      {Object.entries(result.scores).map(([key, value]: any) => {
+        const pct = value;
+        const label =
+          key === "data_quality" ? "Datenqualität" :
+          key === "process_maturity" ? "Prozessreife" :
+          key === "automation" ? "Automatisierung" :
+          key === "governance" ? "Governance" : key;
+
+        const color =
+          pct < 40 ? "bg-red-500" :
+          pct < 70 ? "bg-yellow-500" :
+          "bg-green-600";
+
+        return (
+          <div key={key}>
+            <div className="flex justify-between mb-1">
+              <span className="font-medium">{label}</span>
+              <span className="text-gray-600">{pct}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded h-4">
+              <div
+                className={`h-4 rounded ${color}`}
+                style={{ width: `${pct}%` }}
+              ></div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    {/* Risiken */}
+    <div>
+      <h3 className="text-xl font-semibold mb-3">Risiken</h3>
+      <div className="space-y-3">
+        {result.risks.map((risk: string, i: number) => (
+          <div key={i} className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="text-red-700 font-medium">⚠️ {risk}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Empfehlungen */}
+    <div>
+      <h3 className="text-xl font-semibold mb-3">Top-Empfehlungen</h3>
+      <div className="space-y-3">
+        {result.recommendations.map((rec: any, i: number) => (
+          <div key={i} className="p-4 bg-gray-100 border rounded-lg">
+            <div className="font-semibold mb-1">Priorität {rec.prio}</div>
+            <div className="text-gray-700">{rec.text}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
   </div>
 )}
+
 
