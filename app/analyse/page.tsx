@@ -80,98 +80,104 @@ export default function AnalysePage() {
       {loading && <p className="mt-4">Analyse läuft…</p>}
 
       {result && (
-  <div className="mt-12 bg-white border border-gray-200 rounded-2xl p-8 shadow-xl space-y-10 animate-fadeIn">
+  <div className="mt-16 space-y-12 animate-fadeIn">
 
-    {/* HEADER */}
-    <div className="flex items-center justify-between">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Analyse Ergebnis</h2>
-        <p className="text-gray-500 mt-1">Basierend auf deinen Antworten</p>
+    {/* HEADER CARD */}
+    <div className="bg-white border border-gray-200 shadow-lg rounded-2xl p-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Analyse Ergebnis</h2>
+          <p className="text-gray-500 mt-1 text-lg">
+            Zusammengefasste Bewertung deiner CMDB- & SACM-Reife
+          </p>
+        </div>
+
+        {/* MATURITY BADGE */}
+        <span className={`
+          px-6 py-3 text-white text-sm rounded-full font-semibold shadow
+          ${result.maturity_level === "Initial" ? "bg-red-600" :
+             result.maturity_level === "Repeatable" ? "bg-orange-500" :
+             result.maturity_level === "Defined" ? "bg-yellow-500" :
+             result.maturity_level === "Managed" ? "bg-green-600" :
+             "bg-blue-600"}
+        `}>
+          {result.maturity_level}
+        </span>
       </div>
-
-      <span className="px-5 py-2 rounded-full text-white text-sm font-semibold bg-black shadow">
-        {result.maturity_level}
-      </span>
     </div>
 
-    {/* SECTION: SCORES */}
-    <section>
-      <h3 className="text-xl font-semibold mb-4">Reifegrad-Scores</h3>
-      <div className="space-y-5">
-        {Object.entries(result.scores).map(([key, value]: any) => {
-          const pct = value;
-          const label =
-            key === "data_quality" ? "Datenqualität" :
-            key === "process_maturity" ? "Prozessreife" :
-            key === "automation" ? "Automatisierung" :
-            key === "governance" ? "Governance" : key;
+    {/* GRID: LEFT (Scores) + RIGHT (Risks/Recommendations) */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-          const color =
-            pct < 40 ? "bg-red-500" :
-            pct < 70 ? "bg-yellow-500" :
-            "bg-green-600";
+      {/* ---- LEFT: SCORES ---- */}
+      <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
+        <h3 className="text-xl font-semibold mb-6">Reifegrad-Scores</h3>
 
-          return (
-            <div key={key}>
-              <div className="flex justify-between mb-1">
-                <span className="font-medium text-gray-800">{label}</span>
-                <span className="text-gray-600 font-semibold">{pct}%</span>
+        <div className="space-y-6">
+          {Object.entries(result.scores).map(([key, value]: any) => {
+            const label =
+              key === "data_quality" ? "Datenqualität" :
+              key === "process_maturity" ? "Prozessreife" :
+              key === "automation" ? "Automatisierung" :
+              key === "governance" ? "Governance" : key;
+
+            const color =
+              value < 40 ? "bg-red-500" :
+              value < 70 ? "bg-yellow-500" :
+              "bg-green-600";
+
+            return (
+              <div key={key}>
+                <div className="flex justify-between mb-1">
+                  <span className="font-medium">{label}</span>
+                  <span className="font-semibold text-gray-700">{value}%</span>
+                </div>
+
+                <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                  <div
+                    className={`h-3 rounded-full transition-all duration-700 ${color}`}
+                    style={{ width: `${value}%` }}
+                  ></div>
+                </div>
               </div>
+            );
+          })}
+        </div>
+      </div>
 
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-700 ease-out ${color}`}
-                  style={{ width: `${pct}%` }}
-                ></div>
+      {/* ---- RIGHT: RISKS + RECS ---- */}
+      <div className="space-y-6">
+
+        {/* Risiken */}
+        <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
+          <h3 className="text-xl font-semibold mb-4">Identifizierte Risiken</h3>
+
+          <div className="space-y-4">
+            {result.risks.map((risk: string, i: number) => (
+              <div key={i} className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                <span className="font-semibold text-red-700">⚠️ Risiko:</span>
+                <p className="text-red-700 mt-1 leading-relaxed">{risk}</p>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
-
-    {/* SECTION: RISKS */}
-    <section>
-      <h3 className="text-xl font-semibold mb-4">Identifizierte Risiken</h3>
-      <div className="space-y-4">
-        {result.risks.map((risk: string, i: number) => (
-          <div
-            key={i}
-            className="p-5 bg-red-50 border border-red-200 rounded-xl shadow-sm flex items-start gap-3"
-          >
-            <span className="text-red-600 text-xl">⚠️</span>
-            <p className="text-red-700 leading-relaxed">{risk}</p>
+            ))}
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
 
-    {/* SECTION: RECOMMENDATIONS */}
-    <section>
-      <h3 className="text-xl font-semibold mb-4">Top-Empfehlungen</h3>
-      <div className="space-y-4">
-        {result.recommendations.map((rec: any, i: number) => (
-          <div
-            key={i}
-            className="p-5 bg-gray-50 border border-gray-300 rounded-xl shadow-sm"
-          >
-            <div className="font-bold mb-1 text-gray-800">
-              Priorität {rec.prio}
-            </div>
-            <p className="text-gray-700 leading-relaxed">{rec.text}</p>
+        {/* Empfehlungen */}
+        <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
+          <h3 className="text-xl font-semibold mb-4">Strategische Empfehlungen</h3>
+
+          <div className="space-y-4">
+            {result.recommendations.map((rec: any, i: number) => (
+              <div key={i} className="p-4 bg-gray-50 border rounded-xl shadow-sm">
+                <div className="font-bold mb-1 text-gray-800">
+                  Priorität {rec.prio}
+                </div>
+                <p className="text-gray-700 leading-relaxed">{rec.text}</p>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
-    </section>
-
-    {/* PDF BUTTON */}
-    <div className="pt-4 border-t flex justify-end">
-      <button
-        onClick={() => downloadPDF(result)}
-        className="px-6 py-3 bg-black text-white rounded-lg shadow hover:bg-gray-900 transition"
-      >
-        PDF herunterladen
-      </button>
     </div>
 
   </div>
