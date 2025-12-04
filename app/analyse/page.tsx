@@ -1,5 +1,6 @@
 "use client";
-
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import { useState, useEffect } from "react";
 
 export default function AnalysePage() {
@@ -7,6 +8,28 @@ export default function AnalysePage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+
+  async function exportPDF() {
+  const element = document.getElementById("result-area");
+  if (!element) return;
+
+  const canvas = await html2canvas(element, { scale: 2 });
+  const imgData = canvas.toDataURL("image/png");
+
+  const pdf = new jsPDF({
+    orientation: "p",
+    unit: "mm",
+    format: "a4",
+  });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const imgWidth = pageWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+  pdf.save("Confix-Analyse.pdf");
+}
+
 
   // -----------------------------
   // 🛠 Ergebnis sicher normalisieren
@@ -99,12 +122,21 @@ export default function AnalysePage() {
       >
         Analyse starten
       </button>
+{result && (
+  <button
+    onClick={exportPDF}
+    className="mt-6 px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700"
+  >
+    PDF herunterladen
+  </button>
+)}
 
       {loading && <p className="mt-4">Analyse läuft…</p>}
 
       {/* Ergebnisbereich */}
-      {result && (
-        <div className="mt-16 space-y-12">
+     {result && (
+        <div id="result-area" className="mt-16 space-y-12 animate-fadeIn">
+
 
           {/* HEADER CARD */}
           <div className="bg-white border border-gray-200 shadow-lg rounded-2xl p-8">
