@@ -80,10 +80,11 @@ export default function AnalysePage() {
       {loading && <p className="mt-4">Analyse läuft…</p>}
 
       {result && (
-        <pre className="mt-6 p-4 bg-gray-100 rounded border text-sm">
-          {JSON.stringify(result, null, 2)}
-        </pre>
-      )}
-    </div>
-  );
-}
+  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+    <h2 className="text-xl font-bold mb-4">Ergebnis</h2>
+    <pre className="text-sm bg-gray-100 p-4 rounded-lg">
+      {JSON.stringify(result, null, 2)}
+    </pre>
+  </div>
+)}
+
