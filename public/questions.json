@@ -1,0 +1,62 @@
+[
+  {
+    "id": "q1",
+    "text": "Sind die in der CMDB erfassten Configuration Items (CIs) vollständig und entsprechen sie den tatsächlichen IT-Assets?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q2",
+    "text": "Existieren klare Regeln zur Benennung, Klassifikation und Pflege der Attribute von CIs?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q3",
+    "text": "Sind für alle wichtigen CI-Kategorien Verantwortlichkeiten (Owner / Maintainer) definiert?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q4",
+    "text": "Sind CMDB-Richtlinien, Standards und Vorgaben dokumentiert und werden aktiv genutzt?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q5",
+    "text": "Ist der Prozess zur Aktualisierung der CMDB (z. B. Change-bezogen) formal definiert und implementiert?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q6",
+    "text": "Werden regelmäßige Audits oder Reviews zur CMDB-Datenqualität durchgeführt?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q7",
+    "text": "Sind technische Discovery-Tools (z. B. Netzwerk-Scan, Agent Discovery, Cloud Inventory) im Einsatz?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q8",
+    "text": "Werden Änderungen am Infrastruktur- oder Cloud-Inventar automatisch in die CMDB übertragen?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q9",
+    "text": "Wird die CMDB aktiv für Impact-Analysen, Incident- oder Change-Entscheidungen genutzt?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  },
+  {
+    "id": "q10",
+    "text": "Sind Service-Abhängigkeiten (z. B. Server → Applikation → Business Service) in der CMDB dokumentiert?",
+    "type": "select",
+    "options": ["Ja", "Teilweise", "Nein"]
+  }
+]
