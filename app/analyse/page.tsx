@@ -57,7 +57,7 @@ export default function AnalysePage() {
             <select
               onChange={(e) => updateAnswer(q.id, e.target.value)}
               className="border rounded w-full p-2"
-              defaultValue=""
+              value={answers[q.id] || ""}
             >
               <option value="" disabled>Bitte wählen…</option>
               {q.options.map((opt: string) => (
