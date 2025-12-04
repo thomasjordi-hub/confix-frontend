@@ -7,7 +7,24 @@ export default function AnalysePage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
-
+function normalizeResult(data: any) {
+  return {
+    scores: {
+      data_quality: Number(data?.scores?.data_quality ?? 0),
+      process_maturity: Number(data?.scores?.process_maturity ?? 0),
+      automation: Number(data?.scores?.automation ?? 0),
+      governance: Number(data?.scores?.governance ?? 0)
+    },
+    maturity_level: data?.maturity_level || "Initial",
+    risks: Array.isArray(data?.risks) ? data.risks : [],
+    recommendations: Array.isArray(data?.recommendations)
+      ? data.recommendations.map((r: any) => ({
+          prio: Number(r?.prio ?? 0),
+          text: r?.text ?? ""
+        }))
+      : []
+  };
+}
   useEffect(() => {
     fetch("/questions.json")
       .then((res) => res.json())
@@ -36,7 +53,7 @@ export default function AnalysePage() {
       });
 
       const data = await res.json();
-      setResult(data);
+      setResult(normalizeResult(data));
     } catch (err) {
       setResult({ error: "API nicht erreichbar", details: String(err) });
     }
