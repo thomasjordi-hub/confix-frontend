@@ -48,3 +48,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* ---- PDF Safe Mode: ersetzt ALLE Farben für html2canvas ---- */
+.pdf-safe *,
+.pdf-safe {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: none !important;
+}
