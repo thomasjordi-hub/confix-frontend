@@ -162,7 +162,7 @@ async function exportPDF() {
           </button>
 
           {/* RESULT AREA */}
-          <div id="result-area" className="mt-16 space-y-12 animate-fadeIn">
+          <div id="result-area" className="pdf-safe">
             {/* HEADER CARD */}
             <div className="bg-white border border-gray-200 shadow-lg rounded-2xl p-8">
               <div className="flex items-center justify-between">
