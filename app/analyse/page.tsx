@@ -151,8 +151,16 @@ async function exportPDF() {
       {loading && <p className="mt-4">Analyse läuft…</p>}
 
       {/* Ergebnis */}
-      {result && (
-  <div id="result-area" className="pdf-safe mt-16 space-y-12 animate-fadeIn">
+      {{result && (
+  <>
+    <button
+      onClick={exportPDF}
+      className="mt-8 px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      PDF herunterladen
+    </button>
+
+    <div id="result-area" className="pdf-safe mt-16 space-y-12 animate-fadeIn">
 
           {/* PDF BUTTON */}
           <button
