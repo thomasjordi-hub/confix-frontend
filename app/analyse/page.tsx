@@ -77,7 +77,7 @@ async function exportPDF() {
       return;
     }
 
-    // Dynamisch importieren, aber nicht mit next/dynamic
+    // WICHTIG: Bibliotheken erst clientseitig laden
     const html2canvas = (await import("html2canvas")).default;
     const { jsPDF } = await import("jspdf");
 
@@ -110,6 +110,7 @@ async function exportPDF() {
     console.error("PDF error:", err);
   }
 }
+
 
 
   return (
