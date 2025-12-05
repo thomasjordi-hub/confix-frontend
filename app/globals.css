@@ -1,3 +1,21 @@
+/* ---------- FONT VARIABLES ---------- */
+
+:root {
+  --font-inter: "Inter", sans-serif;
+  --font-plexmono: "IBM Plex Mono", monospace;
+}
+
+/* Default UI Font */
+body {
+  font-family: var(--font-inter);
+}
+
+/* Optional: Monospace utility class */
+.font-mono {
+  font-family: var(--font-plexmono);
+}
+
+
 @import "tailwindcss";
 
 :root {
