@@ -1,26 +1,60 @@
 "use client";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 
 export default function AnalysePage() {
   const [questions, setQuestions] = useState<any[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  // 👉 Wichtig: html2canvas & jsPDF müssen dynamisch geladen werden
+  const html2canvas = dynamic(() => import("html2canvas"), { ssr: false });
+  const jsPDF = dynamic(() => import("jspdf"), { ssr: false });
 
   async function exportPDF() {
-  const element = document.getElementById("result-area");
-  if (!element) return;
+  try {
+    const element = document.getElementById("result-area");
+    if (!element) {
+      console.error("result-area not found!");
+      return;
+    }
 
-  const canvas = await html2canvas(element, { scale: 2 });
-  const imgData = canvas.toDataURL("image/png");
+    console.log("Starte Screenshot…");
 
-  const pdf = new jsPDF({
-    orientation: "p",
-    unit: "mm",
-    format: "a4",
-  });
+    const html2canvasModule = await html2canvas;  // dynamisch geladen
+    const jsPDFModule = await jsPDF;              // dynamisch geladen
+
+    const canvas = await html2canvasModule(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+    });
+
+    console.log("Screenshot fertig");
+
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDFModule.jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4",
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+    pdf.save("Confix-Analyse.pdf");
+
+    console.log("PDF erstellt");
+
+  } catch (err) {
+    console.error("PDF error:", err);
+  }
+}
+
 
   const pageWidth = pdf.internal.pageSize.getWidth();
   const imgWidth = pageWidth;
