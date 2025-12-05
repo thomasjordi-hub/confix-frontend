@@ -1,11 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
-
-// Dynamischer Import für PDF-Bibliotheken
-const html2canvas = dynamic(() => import("html2canvas"), { ssr: false });
-const jsPDF = dynamic(() => import("jspdf"), { ssr: false });
 
 export default function AnalysePage() {
   const [questions, setQuestions] = useState<any[]>([]);
@@ -72,48 +67,50 @@ export default function AnalysePage() {
   // -----------------------------
   // PDF Export
   // -----------------------------
-  async function exportPDF() {
-    try {
-      console.log("PDF Button clicked!");
+async function exportPDF() {
+  try {
+    console.log("PDF Button clicked!");
 
-      const element = document.getElementById("result-area");
-      if (!element) {
-        console.error("result-area not found!");
-        return;
-      }
-
-      const html2canvasModule = await html2canvas;
-      const jsPDFModule = await jsPDF;
-
-      console.log("Starte Screenshot…");
-
-      const canvas = await html2canvasModule(element, {
-        scale: 2,
-        backgroundColor: "#ffffff",
-        useCORS: true,
-      });
-
-      console.log("Screenshot fertig");
-
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDFModule.jsPDF({
-        orientation: "p",
-        unit: "mm",
-        format: "a4",
-      });
-
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      pdf.save("Confix-Analyse.pdf");
-
-      console.log("PDF erstellt");
-    } catch (err) {
-      console.error("PDF error:", err);
+    const element = document.getElementById("result-area");
+    if (!element) {
+      console.error("result-area not found!");
+      return;
     }
+
+    // Dynamisch importieren, aber nicht mit next/dynamic
+    const html2canvas = (await import("html2canvas")).default;
+    const { jsPDF } = await import("jspdf");
+
+    console.log("Starte Screenshot…");
+
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+    });
+
+    console.log("Screenshot fertig");
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4",
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+    pdf.save("Confix-Analyse.pdf");
+
+    console.log("PDF erstellt");
+  } catch (err) {
+    console.error("PDF error:", err);
   }
+}
+
 
   return (
     <div className="max-w-3xl mx-auto p-8">
