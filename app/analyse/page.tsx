@@ -152,7 +152,8 @@ async function exportPDF() {
 
       {/* Ergebnis */}
       {result && (
-        <>
+  <div id="result-area" className="pdf-safe mt-16 space-y-12 animate-fadeIn">
+
           {/* PDF BUTTON */}
           <button
             onClick={exportPDF}
