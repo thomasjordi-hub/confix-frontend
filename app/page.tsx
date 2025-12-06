@@ -6,6 +6,12 @@ export default function HomePage() {
       <h1 className="text-4xl font-bold tracking-tight mb-6">
         Willkommen bei Confix
       </h1>
+<a
+  href="/preise"
+  className="mt-4 inline-block text-sm text-gray-600 underline hover:text-gray-800"
+>
+  Zu den Paketen & Preisen
+</a>
 
       <p className="text-gray-600 text-lg leading-relaxed mb-10">
         Dein smarter Assistent für die Analyse des CMDB- und SACM-Reifegrads.
