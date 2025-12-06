@@ -151,8 +151,9 @@ async function exportPDF() {
       {loading && <p className="mt-4">Analyse läuft…</p>}
 
       {/* Ergebnis */}
-      {{result && (
+     {result && (
   <>
+    {/* PDF BUTTON */}
     <button
       onClick={exportPDF}
       className="mt-8 px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -160,150 +161,127 @@ async function exportPDF() {
       PDF herunterladen
     </button>
 
+    {/* RESULT AREA */}
     <div id="result-area" className="pdf-safe mt-16 space-y-12 animate-fadeIn">
 
-          {/* PDF BUTTON */}
-          <button
-            onClick={exportPDF}
-            className="mt-8 px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700"
+      {/* HEADER CARD */}
+      <div className="bg-white border border-gray-200 shadow-lg rounded-2xl p-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">Analyse Ergebnis</h2>
+            <p className="text-gray-500 mt-1 text-lg">
+              Zusammengefasste Bewertung deiner CMDB- & SACM-Reife
+            </p>
+          </div>
+
+          {/* MATURITY BADGE */}
+          <span
+            className={`
+              px-6 py-3 text-white text-sm rounded-full font-semibold shadow
+              ${
+                result.maturity_level === "Initial"
+                  ? "bg-red-600"
+                  : result.maturity_level === "Repeatable"
+                  ? "bg-orange-500"
+                  : result.maturity_level === "Defined"
+                  ? "bg-yellow-500"
+                  : result.maturity_level === "Managed"
+                  ? "bg-green-600"
+                  : "bg-blue-600"
+              }
+            `}
           >
-            PDF herunterladen
-          </button>
+            {result.maturity_level}
+          </span>
+        </div>
+      </div>
 
-          {/* RESULT AREA */}
-          <div id="result-area" className="pdf-safe">
-            {/* HEADER CARD */}
-            <div className="bg-white border border-gray-200 shadow-lg rounded-2xl p-8">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-3xl font-bold tracking-tight">
-                    Analyse Ergebnis
-                  </h2>
-                  <p className="text-gray-500 mt-1 text-lg">
-                    Zusammengefasste Bewertung deiner CMDB- & SACM-Reife
-                  </p>
+      {/* GRID (Scores + Risks/Recommendations) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+        {/* SCORES */}
+        <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
+          <h3 className="text-xl font-semibold mb-6">Reifegrad-Scores</h3>
+          <div className="space-y-6">
+            {Object.entries(result.scores).map(([key, value]: any) => {
+              const label =
+                key === "data_quality"
+                  ? "Datenqualität"
+                  : key === "process_maturity"
+                  ? "Prozessreife"
+                  : key === "automation"
+                  ? "Automatisierung"
+                  : key === "governance"
+                  ? "Governance"
+                  : key;
+
+              const color =
+                value < 40
+                  ? "bg-red-500"
+                  : value < 70
+                  ? "bg-yellow-500"
+                  : "bg-green-600";
+
+              return (
+                <div key={key}>
+                  <div className="flex justify-between mb-1">
+                    <span className="font-medium">{label}</span>
+                    <span className="font-semibold text-gray-700">{value}%</span>
+                  </div>
+
+                  <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className={`h-3 rounded-full transition-all duration-700 ${color}`}
+                      style={{ width: `${value}%` }}
+                    ></div>
+                  </div>
                 </div>
+              );
+            })}
+          </div>
+        </div>
 
-                <span
-                  className={`
-                    px-6 py-3 text-white text-sm rounded-full font-semibold shadow
-                    ${
-                      result.maturity_level === "Initial"
-                        ? "bg-red-600"
-                        : result.maturity_level === "Repeatable"
-                        ? "bg-orange-500"
-                        : result.maturity_level === "Defined"
-                        ? "bg-yellow-500"
-                        : result.maturity_level === "Managed"
-                        ? "bg-green-600"
-                        : "bg-blue-600"
-                    }
-                  `}
+        {/* RISKS + RECOMMENDATIONS */}
+        <div className="space-y-6">
+
+          {/* Risiken */}
+          <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
+            <h3 className="text-xl font-semibold mb-4">Identifizierte Risiken</h3>
+            <div className="space-y-4">
+              {result.risks.map((risk: string, i: number) => (
+                <div
+                  key={i}
+                  className="p-4 bg-red-50 border border-red-200 rounded-xl"
                 >
-                  {result.maturity_level}
-                </span>
-              </div>
-            </div>
-
-            {/* GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-              {/* LEFT: SCORES */}
-              <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
-                <h3 className="text-xl font-semibold mb-6">Reifegrad-Scores</h3>
-
-                <div className="space-y-6">
-                  {Object.entries(result.scores).map(([key, value]: any) => {
-                    const label =
-                      key === "data_quality"
-                        ? "Datenqualität"
-                        : key === "process_maturity"
-                        ? "Prozessreife"
-                        : key === "automation"
-                        ? "Automatisierung"
-                        : key === "governance"
-                        ? "Governance"
-                        : key;
-
-                    const color =
-                      value < 40
-                        ? "bg-red-500"
-                        : value < 70
-                        ? "bg-yellow-500"
-                        : "bg-green-600";
-
-                    return (
-                      <div key={key}>
-                        <div className="flex justify-between mb-1">
-                          <span className="font-medium">{label}</span>
-                          <span className="font-semibold text-gray-700">
-                            {value}%
-                          </span>
-                        </div>
-
-                        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className={`h-3 rounded-full transition-all duration-700 ${color}`}
-                            style={{ width: `${value}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  <span className="font-semibold text-red-700">⚠️ Risiko:</span>
+                  <p className="text-red-700 mt-1 leading-relaxed">{risk}</p>
                 </div>
-              </div>
-
-              {/* RIGHT: RISKS + RECOMMENDATIONS */}
-              <div className="space-y-6">
-                {/* Risiken */}
-                <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    Identifizierte Risiken
-                  </h3>
-
-                  <div className="space-y-4">
-                    {result.risks.map((risk: string, i: number) => (
-                      <div
-                        key={i}
-                        className="p-4 bg-red-50 border border-red-200 rounded-xl"
-                      >
-                        <span className="font-semibold text-red-700">
-                          ⚠️ Risiko:
-                        </span>
-                        <p className="text-red-700 mt-1 leading-relaxed">
-                          {risk}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Empfehlungen */}
-                <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    Strategische Empfehlungen
-                  </h3>
-
-                  <div className="space-y-4">
-                    {result.recommendations.map((rec: any, i: number) => (
-                      <div
-                        key={i}
-                        className="p-4 bg-gray-50 border rounded-xl shadow-sm"
-                      >
-                        <div className="font-bold mb-1 text-gray-800">
-                          Priorität {rec.prio}
-                        </div>
-                        <p className="text-gray-700 leading-relaxed">
-                          {rec.text}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-        </>
-      )}
+
+          {/* Empfehlungen */}
+          <div className="bg-white border border-gray-200 shadow-md rounded-2xl p-6">
+            <h3 className="text-xl font-semibold mb-4">
+              Strategische Empfehlungen
+            </h3>
+            <div className="space-y-4">
+              {result.recommendations.map((rec: any, i: number) => (
+                <div
+                  key={i}
+                  className="p-4 bg-gray-50 border rounded-xl shadow-sm"
+                >
+                  <div className="font-bold mb-1 text-gray-800">
+                    Priorität {rec.prio}
+                  </div>
+                  <p className="text-gray-700 leading-relaxed">{rec.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-  );
-}
+  </>
+)}
