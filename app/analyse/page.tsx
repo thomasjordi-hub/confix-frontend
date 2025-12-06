@@ -73,36 +73,52 @@ export default function AnalysePage() {
   // PDF Export
   // -----------------------------
   async function exportPDF() {
-    try {
-      const element = document.getElementById("result-area");
-      if (!element) return;
+  try {
+    console.log("PDF Button clicked!");
 
-      const html2canvas = (await import("html2canvas")).default;
-      const { jsPDF } = await import("jspdf");
+    const element = document.getElementById("result-area");
 
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        backgroundColor: "#ffffff",
-        useCORS: true,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "p",
-        unit: "mm",
-        format: "a4",
-      });
-
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      pdf.save("Confix-Analyse.pdf");
-    } catch (err) {
-      console.error("PDF error:", err);
+    if (!element) {
+      console.error("❌ FEHLER: result-area existiert nicht!");
+      alert("PDF konnte nicht erstellt werden – kein Inhalt gefunden.");
+      return;
     }
+
+    // Dynamisch nur im Browser laden
+    const html2canvas = (await import("html2canvas")).default;
+    const { jsPDF } = await import("jspdf");
+
+    console.log("📸 Screenshot wird erstellt…");
+
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      logging: true, // Debug
+    });
+
+    console.log("✔ Screenshot erstellt");
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4",
+    });
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+    pdf.save("Confix-Analyse.pdf");
+
+    console.log("✔ PDF erfolgreich erstellt!");
+  } catch (err) {
+    console.error("❌ PDF error:", err);
+    alert("PDF konnte nicht erstellt werden (Fehler siehe Konsole).");
   }
+}
 
   // -----------------------------
   // RETURN (UI)
