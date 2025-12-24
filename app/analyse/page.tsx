@@ -112,7 +112,7 @@ useEffect(() => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/score`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers }),
+        body: JSON.stringify({ answers, plan }),
       });
 
       const data = await res.json();
@@ -160,10 +160,10 @@ useEffect(() => {
 
   return (
     <div className="max-w-3xl mx-auto p-8">
-      const planLabel =
-  typeof window !== "undefined"
-    ? (new URLSearchParams(window.location.search).get("plan") || "S").toUpperCase()
-    : "S";
+      <h1 className="text-3xl font-bold mb-2">
+  CMDB Analyse – {plan} ({questions.length} Fragen)
+</h1>
+
 
       <p className="text-gray-600 mb-8">
         Bitte beantworte alle Fragen. Danach erhältst du Scores, Risiken,
