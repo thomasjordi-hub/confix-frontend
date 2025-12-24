@@ -7,6 +7,8 @@ export default function AnalysePage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
 
   // -----------------------------
   // Ergebnis normalisieren
@@ -49,9 +51,21 @@ export default function AnalysePage() {
   // -----------------------------
   // Analyse an Backend senden
   // -----------------------------
-  async function submit() {
-    setLoading(true);
-    setResult(null);
+  function allAnswered() {
+  return questions.length > 0 && questions.every((q) => (answers[q.id] ?? "").trim() !== "");
+}
+async function submit() {
+  setError(null);
+
+  if (!allAnswered()) {
+    setError("Bitte beantworte alle 10 Fragen, bevor du die Analyse startest.");
+    return;
+  }
+
+  setLoading(true);
+  setResult(null);
+  // ... dein bestehender Code bleibt
+
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/score`, {
@@ -134,10 +148,14 @@ export default function AnalysePage() {
             <label className="block font-medium mb-2">{q.text}</label>
 
             <select
-              onChange={(e) => updateAnswer(q.id, e.target.value)}
-              className="border rounded w-full p-2"
-              value={answers[q.id] || ""}
-            >
+  required
+  onChange={(e) => updateAnswer(q.id, e.target.value)}
+  className={`border rounded w-full p-2 ${
+    error && !(answers[q.id] ?? "") ? "border-red-500 bg-red-50" : ""
+  }`}
+  value={answers[q.id] || ""}
+/>
+
               <option value="" disabled>
                 Bitte wählen…
               </option>
@@ -154,11 +172,22 @@ export default function AnalysePage() {
 
       {/* Analyse Button */}
       <button
-        onClick={submit}
-        className="mt-8 px-6 py-3 bg-black text-white rounded hover:bg-gray-900"
-      >
-        Analyse starten
-      </button>
+  onClick={submit}
+  disabled={!allAnswered() || loading}
+  className={`mt-8 px-6 py-3 rounded text-white ${
+    !allAnswered() || loading
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-black hover:bg-gray-900"
+  }`}
+>
+  Analyse starten
+</button>
+{error && (
+  <p className="mt-4 text-sm text-red-600 font-medium">
+    {error}
+  </p>
+)}
+
 
       {loading && <p className="mt-4">Analyse läuft…</p>}
 
