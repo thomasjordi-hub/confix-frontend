@@ -26,6 +26,8 @@ export default function AnalysePage() {
   const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [plan, setPlan] = useState<"S" | "M" | "L">("S");
+
 
   // Fragen laden (robust)
 useEffect(() => {
@@ -33,12 +35,13 @@ useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
       const planRaw = (params.get("plan") || "S").toUpperCase();
-      const plan = planRaw === "M" || planRaw === "L" ? planRaw : "S";
+      const selected: "S" | "M" | "L" = planRaw === "M" || planRaw === "L" ? planRaw : "S";
+      setPlan(selected);
 
       const file =
-        plan === "M"
+        selected === "M"
           ? "/questions-m.json"
-          : plan === "L"
+          : selected === "L"
           ? "/questions-l.json"
           : "/questions-s.json";
 
@@ -47,16 +50,16 @@ useEffect(() => {
       const data = await res.json();
 
       setQuestions(Array.isArray(data) ? data : []);
-      setAnswers({});     // Planwechsel → Antworten reset
-      setResult(null);    // Planwechsel → Ergebnis reset
+      setAnswers({});
+      setResult(null);
       setError(null);
     } catch (e) {
       console.error("questions load failed:", e);
       setQuestions([]);
     }
   })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
+
 
 
   function updateAnswer(id: string, value: string) {
@@ -157,7 +160,11 @@ useEffect(() => {
 
   return (
     <div className="max-w-3xl mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-2">CMDB Analyse – 10 Fragen</h1>
+      const planLabel =
+  typeof window !== "undefined"
+    ? (new URLSearchParams(window.location.search).get("plan") || "S").toUpperCase()
+    : "S";
+
       <p className="text-gray-600 mb-8">
         Bitte beantworte alle Fragen. Danach erhältst du Scores, Risiken,
         Empfehlungen und kannst den PDF-Report herunterladen.
