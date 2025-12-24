@@ -28,19 +28,36 @@ export default function AnalysePage() {
   const [error, setError] = useState<string | null>(null);
 
   // Fragen laden (robust)
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/questions.json", { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setQuestions(Array.isArray(data) ? data : []);
-      } catch (e) {
-        console.error("questions.json load failed:", e);
-        setQuestions([]);
-      }
-    })();
-  }, []);
+useEffect(() => {
+  (async () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const planRaw = (params.get("plan") || "S").toUpperCase();
+      const plan = planRaw === "M" || planRaw === "L" ? planRaw : "S";
+
+      const file =
+        plan === "M"
+          ? "/questions-m.json"
+          : plan === "L"
+          ? "/questions-l.json"
+          : "/questions-s.json";
+
+      const res = await fetch(file, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      setQuestions(Array.isArray(data) ? data : []);
+      setAnswers({});     // Planwechsel → Antworten reset
+      setResult(null);    // Planwechsel → Ergebnis reset
+      setError(null);
+    } catch (e) {
+      console.error("questions load failed:", e);
+      setQuestions([]);
+    }
+  })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
 
   function updateAnswer(id: string, value: string) {
     setAnswers((prev) => ({ ...prev, [id]: value }));
