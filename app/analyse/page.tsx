@@ -27,7 +27,31 @@ export default function AnalysePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [plan, setPlan] = useState<"S" | "M" | "L">("S");
+  const [accessDenied, setAccessDenied] = useState(false);
 
+  function hasAccess(p: "S" | "M" | "L") {
+  if (p === "S") return true;
+
+  // gespeicherte Freischaltung
+  const key = p === "M" ? "confix_access_M" : "confix_access_L";
+  const value = localStorage.getItem(key);
+  if (!value) return false;
+
+  // optional: Ablaufdatum prüfen (Epoch ms)
+  const expires = Number(value);
+  if (!expires || Date.now() > expires) {
+    localStorage.removeItem(key);
+    return false;
+  }
+  return true;
+}
+
+function grantAccess(p: "M" | "L") {
+  const key = p === "M" ? "confix_access_M" : "confix_access_L";
+  // 30 Tage gültig
+  const expires = Date.now() + 30 * 24 * 60 * 60 * 1000;
+  localStorage.setItem(key, String(expires));
+}
 
   // Fragen laden (robust)
 useEffect(() => {
@@ -35,7 +59,27 @@ useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
       const planRaw = (params.get("plan") || "S").toUpperCase();
-      const selected: "S" | "M" | "L" = planRaw === "M" || planRaw === "L" ? planRaw : "S";
+      const selected: "S" | "M" | "L" =
+        planRaw === "M" || planRaw === "L" ? planRaw : "S";
+
+      // Stripe Success Redirect: payment=success&plan=M|L
+      const payment = params.get("payment");
+      if (payment === "success" && (selected === "M" || selected === "L")) {
+        grantAccess(selected);
+        // URL säubern (optional, damit man es nicht dauernd sieht)
+        params.delete("payment");
+        const clean = `${window.location.pathname}?plan=${selected}`;
+        window.history.replaceState({}, "", clean);
+      }
+
+      // Access Check
+      if (!hasAccess(selected)) {
+        setAccessDenied(true);
+        // Redirect zu /preise, mit Rücksprung-Link
+        window.location.href = `/preise?reason=upgrade_required&plan=${selected}`;
+        return;
+      }
+
       setPlan(selected);
 
       const file =
@@ -159,6 +203,12 @@ useEffect(() => {
   }
 
   return (
+    {accessDenied && (
+  <p className="text-sm text-red-600">
+    Zugriff auf dieses Paket ist gesperrt. Du wirst zu den Preisen weitergeleitet…
+  </p>
+)}
+
     <div className="max-w-3xl mx-auto p-8">
       <h1 className="text-3xl font-bold mb-2">
   CMDB Analyse – {plan} ({questions.length} Fragen)
