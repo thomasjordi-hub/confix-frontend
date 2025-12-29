@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+
 
 type Question = {
   id: string;
@@ -28,6 +30,12 @@ export default function AnalysePage() {
   const [error, setError] = useState<string | null>(null);
   const [plan, setPlan] = useState<"S" | "M" | "L">("S");
   const [accessDenied, setAccessDenied] = useState(false);
+  
+const searchParams = useSearchParams();
+const router = useRouter();
+const planParam = (searchParams.get("plan") || "S").toUpperCase();
+const plan: "S" | "M" | "L" = planParam === "M" || planParam === "L" ? planParam : "S";
+
 
   function hasAccess(p: "S" | "M" | "L") {
   if (p === "S") return true;
@@ -46,12 +54,74 @@ export default function AnalysePage() {
   return true;
 }
 
+function hasAccess(p: "S" | "M" | "L") {
+  if (p === "S") return true;
+
+  const key = p === "M" ? "confix_access_M" : "confix_access_L";
+  const expires = Number(localStorage.getItem(key) || 0);
+  if (!expires) return false;
+
+  if (Date.now() > expires) {
+    localStorage.removeItem(key);
+    return false;
+  }
+  return true;
+}
+
 function grantAccess(p: "M" | "L") {
   const key = p === "M" ? "confix_access_M" : "confix_access_L";
-  // 30 Tage gültig
-  const expires = Date.now() + 30 * 24 * 60 * 60 * 1000;
+  const expires = Date.now() + 30 * 24 * 60 * 60 * 1000; // 30 Tage
   localStorage.setItem(key, String(expires));
 }
+useEffect(() => {
+  // Nur im Browser
+  if (typeof window === "undefined") return;
+
+  const payment = searchParams.get("payment");
+
+  // Wenn Stripe success redirect: /analyse?plan=M&payment=success
+  if (payment === "success" && (plan === "M" || plan === "L")) {
+    grantAccess(plan);
+    router.replace(`/analyse?plan=${plan}`); // URL säubern
+    return;
+  }
+
+  // Zugriff prüfen
+  if (!hasAccess(plan)) {
+    router.replace(`/preise?reason=upgrade_required&plan=${plan}`);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [plan]);
+
+  useEffect(() => {
+  (async () => {
+    try {
+      if (typeof window === "undefined") return;
+      if (!hasAccess(plan)) return; // falls Redirect noch läuft
+
+      const file =
+        plan === "M"
+          ? "/questions-m.json"
+          : plan === "L"
+          ? "/questions-l.json"
+          : "/questions-s.json";
+
+      const res = await fetch(file, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      setQuestions(Array.isArray(data) ? data : []);
+      setAnswers({});
+      setResult(null);
+      setError(null);
+    } catch (e) {
+      console.error("questions load failed:", e);
+      setQuestions([]);
+    }
+  })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [plan]);
+
 
   // Fragen laden (robust)
 useEffect(() => {
