@@ -40,10 +40,11 @@ export default function PricingPage() {
 
             <div className="mt-auto">
               <a
-              {/* href="/analyse" */}
-                <Link href="/analyse?plan=S">
+              href="/analyse"
+                
                 className="block w-full text-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium hover:bg-gray-100"
-              >Gratis starten</Link>
+              >
+                Gratis starten
               </a>
             </div>
           </div>
