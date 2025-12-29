@@ -76,12 +76,11 @@ export default function PricingPage() {
 
             <div className="mt-auto">
               {/* TODO: später auf echten Checkout/Plan verlinken */}
-              <a
-                href="/analyse"
+              <Link href="/analyse?plan=M"
                 className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700"
               >
                 Professional-Assessment starten
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -107,12 +106,11 @@ export default function PricingPage() {
             </ul>
 
             <div className="mt-auto space-y-2">
-              <a
-                href="/analyse"
+              <Link href="/analyse?plan=L"
                 className="block w-full text-center px-4 py-2 bg-black text-white rounded-xl text-sm font-medium hover:bg-gray-900"
               >
                 Enterprise-Assessment anfragen
-              </a>
+              </Link>
               <p className="text-[11px] text-gray-500 text-center">
                 Optional: Experten-Review und Roadmap als Zusatzleistung.
               </p>
