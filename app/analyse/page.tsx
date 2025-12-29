@@ -33,8 +33,15 @@ export default function AnalysePage() {
   
 const searchParams = useSearchParams();
 const router = useRouter();
+
 const planParam = (searchParams.get("plan") || "S").toUpperCase();
-const plan: "S" | "M" | "L" = planParam === "M" || planParam === "L" ? planParam : "S";
+const requestedPlan: "S" | "M" | "L" =
+  planParam === "M" || planParam === "L" ? planParam : "S";
+
+  useEffect(() => {
+  setPlan(requestedPlan);
+}, [requestedPlan]);
+
 
 
   function hasAccess(p: "S" | "M" | "L") {
