@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 export default function PricingPage() {
   return (
@@ -39,13 +40,12 @@ export default function PricingPage() {
             </ul>
 
             <div className="mt-auto">
-              <a
-              href="/analyse"
-                
-                className="block w-full text-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium hover:bg-gray-100"
-              >
-                Gratis starten
-              </a>
+              <Link  href="/analyse?plan=S"
+  className="block w-full text-center px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium hover:bg-gray-100"
+>
+  Gratis starten
+</Link>
+
             </div>
           </div>
 
