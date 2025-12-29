@@ -7,7 +7,7 @@ export default function PricingPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold tracking-tight mb-4">
-            Confix – CMDB Reifegrad-Pakete
+            Confix – CMDB Reifegrad-Pakete / Self Assessements
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Wähle das passende Paket für deine Organisation – vom schnellen
