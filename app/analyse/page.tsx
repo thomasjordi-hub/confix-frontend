@@ -203,18 +203,15 @@ useEffect(() => {
   }
 
   return (
-    {accessDenied && (
+        <div className="max-w-3xl mx-auto p-8">
+      <h1 className="text-3xl font-bold mb-2">
+  CMDB Analyse – {plan} ({questions.length} Fragen)
+</h1>
+          {accessDenied && (
   <p className="text-sm text-red-600">
     Zugriff auf dieses Paket ist gesperrt. Du wirst zu den Preisen weitergeleitet…
   </p>
 )}
-
-    <div className="max-w-3xl mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-2">
-  CMDB Analyse – {plan} ({questions.length} Fragen)
-</h1>
-
-
       <p className="text-gray-600 mb-8">
         Bitte beantworte alle Fragen. Danach erhältst du Scores, Risiken,
         Empfehlungen und kannst den PDF-Report herunterladen.
