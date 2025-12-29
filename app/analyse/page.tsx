@@ -47,31 +47,16 @@ const requestedPlan: "S" | "M" | "L" =
   function hasAccess(p: "S" | "M" | "L") {
   if (p === "S") return true;
 
-  // gespeicherte Freischaltung
-  const key = p === "M" ? "confix_access_M" : "confix_access_L";
-  const value = localStorage.getItem(key);
-  if (!value) return false;
-
-  // optional: Ablaufdatum prüfen (Epoch ms)
-  const expires = Number(value);
-  if (!expires || Date.now() > expires) {
-    localStorage.removeItem(key);
-    return false;
-  }
-  return true;
-}
-
-function hasAccess(p: "S" | "M" | "L") {
-  if (p === "S") return true;
-
   const key = p === "M" ? "confix_access_M" : "confix_access_L";
   const expires = Number(localStorage.getItem(key) || 0);
+
   if (!expires) return false;
 
   if (Date.now() > expires) {
     localStorage.removeItem(key);
     return false;
   }
+
   return true;
 }
 
@@ -80,6 +65,7 @@ function grantAccess(p: "M" | "L") {
   const expires = Date.now() + 30 * 24 * 60 * 60 * 1000; // 30 Tage
   localStorage.setItem(key, String(expires));
 }
+
 useEffect(() => {
   // Nur im Browser
   if (typeof window === "undefined") return;
