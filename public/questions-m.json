@@ -1,1 +1,118 @@
+[
+  /* =======================
+     DATA QUALITY (dq_)
+     ======================= */
+  {
+    "id": "dq_1",
+    "text": "Sind alle produktiven Configuration Items (CIs) eindeutig identifiziert?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "dq_2",
+    "text": "Sind Pflichtattribute (z.B. Name, Typ, Status, Owner) für CIs definiert und gepflegt?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "dq_3",
+    "text": "Werden Änderungen an CIs zeitnah und konsistent in der CMDB nachgeführt?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "dq_4",
+    "text": "Existieren Qualitätskriterien für CI-Daten (Vollständigkeit, Aktualität, Konsistenz)?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "dq_5",
+    "text": "Werden Dubletten, veraltete oder inaktive CIs systematisch erkannt und bereinigt?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+
+  /* =======================
+     PROCESS MATURITY (pm_)
+     ======================= */
+  {
+    "id": "pm_1",
+    "text": "Ist der CMDB-/SACM-Prozess dokumentiert und organisationsweit etabliert?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "pm_2",
+    "text": "Sind Rollen und Verantwortlichkeiten (z.B. CI Owner, Process Owner) klar definiert?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "pm_3",
+    "text": "Ist die CMDB in Change-, Incident- und Problem-Management integriert?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "pm_4",
+    "text": "Werden CI-Beziehungen (Abhängigkeiten) systematisch gepflegt und genutzt?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "pm_5",
+    "text": "Werden CMDB-Daten aktiv für Impact-Analysen und Entscheidungsfindung genutzt?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+
+  /* =======================
+     AUTOMATION (au_)
+     ======================= */
+  {
+    "id": "au_1",
+    "text": "Gibt es automatisierte Discovery- oder Import-Mechanismen für CI-Daten?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "au_2",
+    "text": "Sind Datenquellen (z.B. Monitoring, Asset-Tools) integriert und synchronisiert?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "au_3",
+    "text": "Werden CI-Datenänderungen automatisiert validiert (Regeln, Plausibilitäten)?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "au_4",
+    "text": "Gibt es automatisierte Qualitätschecks (DQ-Regeln, Reports, Alerts)?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "au_5",
+    "text": "Sind manuelle Pflegeaufwände durch Automatisierung messbar reduziert?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+
+  /* =======================
+     GOVERNANCE (gov_)
+     ======================= */
+  {
+    "id": "gov_1",
+    "text": "Existieren verbindliche Governance-Regeln für CMDB & SACM?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "gov_2",
+    "text": "Sind KPIs zur CMDB-Qualität definiert und werden regelmäßig berichtet?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "gov_3",
+    "text": "Werden regelmäßige Reviews oder Audits der CMDB durchgeführt?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "gov_4",
+    "text": "Sind Eskalations- und Korrekturmechanismen bei Qualitätsabweichungen definiert?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  },
+  {
+    "id": "gov_5",
+    "text": "Ist die CMDB in übergeordnete IT- und Unternehmens-Governance eingebettet?",
+    "options": ["Nicht vorhanden","Initial / Ad-hoc","Wiederholbar, aber inkonsistent","Definiert & gesteuert","Optimiert & kontinuierlich verbessert"]
+  }
+]
 
