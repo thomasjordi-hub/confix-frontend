@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-
 type Question = {
   id: string;
   text: string;
