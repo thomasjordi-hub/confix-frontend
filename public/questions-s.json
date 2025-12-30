@@ -1,62 +1,113 @@
 [
   {
-    "id": "q1",
-    "text": "Sind die in der CMDB erfassten Configuration Items (CIs) vollständig und entsprechen sie den tatsächlichen IT-Assets?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "dq_1",
+    "text": "Sind alle produktiven Configuration Items (CIs) eindeutig identifiziert?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q2",
-    "text": "Existieren klare Regeln zur Benennung, Klassifikation und Pflege der Attribute von CIs?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "dq_2",
+    "text": "Sind Pflichtattribute (z.B. Name, Typ, Status, Owner) für CIs definiert und gepflegt?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q3",
-    "text": "Sind für alle wichtigen CI-Kategorien Verantwortlichkeiten (Owner / Maintainer) definiert?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "dq_3",
+    "text": "Werden Änderungen an CIs zeitnah und konsistent in der CMDB nachgeführt?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q4",
-    "text": "Sind CMDB-Richtlinien, Standards und Vorgaben dokumentiert und werden aktiv genutzt?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "pm_1",
+    "text": "Ist der CMDB-/SACM-Prozess dokumentiert und den relevanten Rollen bekannt?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q5",
-    "text": "Ist der Prozess zur Aktualisierung der CMDB (z. B. Change-bezogen) formal definiert und implementiert?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "pm_2",
+    "text": "Sind Rollen und Verantwortlichkeiten (z.B. CI Owner) klar definiert und gelebt?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q6",
-    "text": "Werden regelmäßige Audits oder Reviews zur CMDB-Datenqualität durchgeführt?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "pm_3",
+    "text": "Werden CMDB-Daten aktiv in operativen und strategischen Entscheidungsprozessen genutzt?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q7",
-    "text": "Sind technische Discovery-Tools (z. B. Netzwerk-Scan, Agent Discovery, Cloud Inventory) im Einsatz?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "au_1",
+    "text": "Gibt es automatisierte Datenquellen (z.B. Discovery, Schnittstellen) für die CMDB?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q8",
-    "text": "Werden Änderungen am Infrastruktur- oder Cloud-Inventar automatisch in die CMDB übertragen?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "au_2",
+    "text": "Werden CMDB-Daten regelmäßig automatisiert auf Qualität und Aktualität geprüft?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q9",
-    "text": "Wird die CMDB aktiv für Impact-Analysen, Incident- oder Change-Entscheidungen genutzt?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "gov_1",
+    "text": "Gibt es verbindliche Governance-Regeln zur Pflege und Qualität der CMDB?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   },
   {
-    "id": "q10",
-    "text": "Sind Service-Abhängigkeiten (z. B. Server → Applikation → Business Service) in der CMDB dokumentiert?",
-    "type": "select",
-    "options": ["Ja", "Teilweise", "Nein"]
+    "id": "gov_2",
+    "text": "Wird die CMDB regelmäßig überwacht (KPIs, Reviews, Audits)?",
+    "options": [
+      "Nicht vorhanden",
+      "Initial / Ad-hoc",
+      "Wiederholbar, aber inkonsistent",
+      "Definiert & gesteuert",
+      "Optimiert & kontinuierlich verbessert"
+    ]
   }
 ]
+
