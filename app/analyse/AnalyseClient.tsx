@@ -11,10 +11,10 @@ type Question = {
 
 type Result = {
   scores: {
-    Datenqualität: number;
-    Prozessmaturität: number;
-    Automatisierung: number;
-    Governance: number;
+    data_quality: number;
+    process_maturity: number;
+    automation: number;
+    governance: number;
   };
   maturity_level: string;
   risks: string[];
