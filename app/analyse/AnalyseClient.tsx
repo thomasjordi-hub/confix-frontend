@@ -355,11 +355,15 @@ function evaluateStaticS(answers: Record<string, string>) {
       </p>
 
       {questions.length === 0 && (
-        <p className="text-sm text-red-600 mb-6">
-          Fragen konnten nicht geladen werden. Prüfe{" "}
-          <span className="font-mono">/public/questions.json</span>
-        </p>
-      )}
+  <p className="text-sm text-red-600 mb-6">
+    Fragen konnten nicht geladen werden. Prüfe die Dateien im{" "}
+    <span className="font-mono">/public</span> Ordner:{" "}
+    <span className="font-mono">questions-s.json</span>,{" "}
+    <span className="font-mono">questions-m.json</span>,{" "}
+    <span className="font-mono">questions-l.json</span>.
+  </p>
+)}
+
 
       {/* Fragen */}
       <div className="space-y-6">
