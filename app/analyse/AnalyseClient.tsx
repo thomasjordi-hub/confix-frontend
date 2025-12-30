@@ -197,39 +197,113 @@ useEffect(() => {
         : [],
     };
   }
+  function scoreValue(v: string) {
+  // passe an deine Options-Texte an (z.B. "Ja/Teilweise/Nein")
+  const val = (v || "").toLowerCase();
+  if (val.includes("ja") || val.includes("yes")) return 100;
+  if (val.includes("teil")) return 50;
+  if (val.includes("nein") || val.includes("no")) return 0;
+  return 0;
+}
+
+function clamp(n: number) {
+  return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+function evaluateStaticS(answers: Record<string, string>) {
+  // IDs nach Prefix clustern: dq_*, pm_*, au_*, gov_*
+  const buckets: Record<string, number[]> = {
+    data_quality: [],
+    process_maturity: [],
+    automation: [],
+    governance: [],
+  };
+
+  for (const [id, val] of Object.entries(answers)) {
+    const s = scoreValue(val);
+
+    if (id.startsWith("dq_")) buckets.data_quality.push(s);
+    else if (id.startsWith("pm_")) buckets.process_maturity.push(s);
+    else if (id.startsWith("au_")) buckets.automation.push(s);
+    else if (id.startsWith("gov_")) buckets.governance.push(s);
+    else buckets.process_maturity.push(s); // fallback
+  }
+
+  const avg = (arr: number[]) =>
+    arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+  const scores = {
+    data_quality: clamp(avg(buckets.data_quality)),
+    process_maturity: clamp(avg(buckets.process_maturity)),
+    automation: clamp(avg(buckets.automation)),
+    governance: clamp(avg(buckets.governance)),
+  };
+
+  const overall = clamp(
+    (scores.data_quality + scores.process_maturity + scores.automation + scores.governance) / 4
+  );
+
+  const maturity_level =
+    overall < 20 ? "Initial" :
+    overall < 40 ? "Repeatable" :
+    overall < 60 ? "Defined" :
+    overall < 80 ? "Managed" :
+    "Optimizing";
+
+  // einfache statische Risiken (ohne AI)
+  const risks: string[] = [];
+  if (scores.data_quality < 50) risks.push("Niedrige Datenqualität erhöht das Risiko falscher Abhängigkeiten und fehlerhafter Impact-Analysen.");
+  if (scores.process_maturity < 50) risks.push("Unklare Prozesse führen zu inkonsistenter CMDB-Pflege und steigenden Betriebskosten.");
+  if (scores.governance < 50) risks.push("Fehlende Governance erschwert Verantwortlichkeiten, Auditierbarkeit und nachhaltige Verbesserung.");
+  if (scores.automation < 50) risks.push("Geringe Automatisierung erhöht manuellen Aufwand und macht die CMDB schneller veraltet.");
+
+  // min. 3 Risiken liefern (für UI)
+  while (risks.length < 3) risks.push("Potenzial für Verbesserungen in CMDB/SACM – vertiefte Analyse empfohlen (M/L).");
+
+  const recommendations = [
+    { prio: 1, text: "Definiere Verantwortlichkeiten (CI Owner) und Mindest-Attribute je CI-Klasse – und setze verbindliche Pflege-Regeln." },
+    { prio: 2, text: "Führe Data-Quality Checks ein (Vollständigkeit, Aktualität, Dubletten) und etabliere einen Korrektur-Workflow." },
+    { prio: 3, text: "Baue eine Service-/Abhängigkeits-Sicht auf (Business Services → CIs) und validiere mit den Fachbereichen." },
+  ];
+
+  return { scores, maturity_level, risks: risks.slice(0, 3), recommendations };
+}
 
   async function submit() {
-    setError(null);
-    setResult(null);
+  setError(null);
+  setResult(null);
 
-    if (!allAnswered) {
-      setError("Bitte beantworte alle 10 Fragen, bevor du die Analyse startest.");
-      // optional: zum ersten offenen Feld scrollen
-      const firstMissing = questions.find((q) => !(answers[q.id] ?? "").trim());
-      if (firstMissing) {
-        const el = document.getElementById(`q-${firstMissing.id}`);
-        el?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/score`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers, plan }),
-      });
-
-      const data = await res.json();
-      setResult(normalizeResult(data));
-    } catch (err) {
-      setError("API nicht erreichbar.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+  if (!allAnswered) {
+    setError("Bitte beantworte alle Fragen, bevor du die Analyse startest.");
+    return;
   }
+
+  // ✅ FREE (S) = statisch encourage upgrade, keine API
+  if (plan === "S") {
+    const staticResult = evaluateStaticS(answers);
+    setResult(staticResult);
+    return;
+  }
+
+  // ✅ M/L = Backend/OpenAI
+  setLoading(true);
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/score`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers, plan }),
+    });
+
+    const data = await res.json();
+    setResult(normalizeResult(data));
+  } catch (err) {
+    setError("API nicht erreichbar.");
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+}
+
 
   async function exportPDF() {
     try {
