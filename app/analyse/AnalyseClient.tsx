@@ -197,14 +197,15 @@ useEffect(() => {
         : [],
     };
   }
-  function scoreValue(v: string) {
-  // passe an deine Options-Texte an (z.B. "Ja/Teilweise/Nein")
-  const val = (v || "").toLowerCase();
-  if (val.includes("ja") || val.includes("yes")) return 100;
-  if (val.includes("teil")) return 50;
-  if (val.includes("nein") || val.includes("no")) return 0;
+ function scoreValue(v: string) {
+  if (v.includes("Nicht vorhanden")) return 0;
+  if (v.includes("Initial")) return 25;
+  if (v.includes("Wiederholbar")) return 50;
+  if (v.includes("Definiert")) return 75;
+  if (v.includes("Optimiert")) return 100;
   return 0;
 }
+
 
 function clamp(n: number) {
   return Math.max(0, Math.min(100, Math.round(n)));
